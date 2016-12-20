@@ -42,6 +42,13 @@ typedef void(^XHCProgressHandler)(double progress);
 + (double)localFileDownloadScaleWithUrl:(NSString *)url;
 
 /**
+ 删除本地记录下载文件的进度，当视频被删除的时候调用
+
+ @param url 视频的url
+ */
++ (void)removeLocalFileDownloadScaleWithUrl:(NSString *)url;
+
+/**
  初始化方法
 
  @param urlString 下载文件的url

@@ -26,15 +26,29 @@
     return size;
 }
 
++ (void)removeLocalFileDownloadScaleWithUrl:(NSString *)url
+{
+    NSString *key = getFileTotalSizeKey(url);
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (instancetype)initWithUrlString:(NSString *)urlString savePath:(NSString *)savePath fileName:(NSString *)fileName fileType:(NSString *)fileType
 {
     if (self = [super init]) {
         NSParameterAssert(urlString);
         NSParameterAssert(savePath);
         NSParameterAssert(fileType);
+        /* 去掉特殊符号做文件名
+        NSString *testString = @"http://v.xiaohongchun.com/BBF10FBD3A3DA18E";
+        NSString *pattern = @"[:./]";
+        NSRegularExpression *regular = [[NSRegularExpression alloc] initWithPattern:pattern options:9 error:nil];
+        NSString *lala = [regular stringByReplacingMatchesInString:testString options:0 range:NSMakeRange(0, testString.length) withTemplate:@""];
+         */
         if (!fileName) {
             fileName = urlString;
         }
+        fileName = [Util getMd5_32Bit_String:fileName];
         
         _destPath = [NSString stringWithFormat:@"%@/%@.%@", savePath, fileName, fileType];
         _url = urlString;

@@ -27,8 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
-    
+    self.title = @"iOS界的小学生";
     [self initView];
 }
 
@@ -77,8 +76,39 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DownloaderModel *model = self.datas[indexPath.row];
-    [[XHCDownloaderManager shareInstall] downloadPathWithDownloaderModel:model];
+    [[XHCDownloaderManager shareInstall] downloadFileWithDownloaderModel:model];
 }
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {// 删除视频
+        
+        DownloaderModel *model = self.datas[indexPath.row];
+        NSMutableArray *array = [NSMutableArray arrayWithArray:self.datas];
+        [array removeObjectAtIndex:indexPath.row];
+        self.datas = [array copy];
+        [tableView beginUpdates];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        [tableView endUpdates];
+        [[XHCDownloaderManager shareInstall] removeDownloadFildWithDownloadModel:model];
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return @"删除";
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete;
+}
+
 
 - (NSArray *)datas
 {

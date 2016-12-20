@@ -11,6 +11,7 @@
 @interface XHCDownloaderModel : NSObject
 
 @property (nonatomic, strong) NSString  *url;
+@property (nonatomic, strong) NSString  *destPath;
 @property (nonatomic, strong) NSNumber  *progress;
 
 @end

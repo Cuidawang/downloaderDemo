@@ -33,10 +33,16 @@
     return manager;
 }
 
-- (void)downloadPathWithDownloaderModel:(XHCDownloaderModel *)model
+- (void)downloadFileWithDownloaderModel:(XHCDownloaderModel *)model
 {
+    
+    if (model.progress.integerValue == 1) {
+        [Util showAlertMessage:@"视频已经下载完成了"];
+        return;
+    }
+    
     if([_downloaderModelDict objectForKey:model.url]) {// 判断开始还是暂停
-        
+
         XHCDownloader *downloader = [_downloaderDict objectForKey:model.url];
         if (downloader.isRunning) {// 如果正在下载，暂停下载
             [downloader pause];
@@ -46,11 +52,13 @@
         }
     }
     else {// 添加到数组中
+        
         if (_downloaderModelDict.allKeys.count < maxDownNum) {
             [_downloaderModelDict setObject:model forKey:model.url];
             
             NSString *path = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
-            XHCDownloader *downloader = [[XHCDownloader alloc] initWithUrlString:model.url savePath:path fileName:[model.url substringFromIndex:25] fileType:@"mp4"];
+            XHCDownloader *downloader = [[XHCDownloader alloc] initWithUrlString:model.url savePath:path fileName:model.url fileType:@"mp4"];
+            model.destPath = downloader.destPath;
             downloader.progressBlock = ^ (double progress) {
                 model.progress = @(progress);
                 if (progress == 1.00) {
@@ -63,9 +71,25 @@
         }
         else {
             // 提示用户超过最大下载数
+            [Util showAlertMessage:@"最大支持三个下载"];
         }
         
     }
+}
+
+- (void)removeDownloadFildWithDownloadModel:(XHCDownloaderModel *)model
+{
+    if ([_downloaderModelDict objectForKey:model.url]) {// 删除时，取消正在下载的任务
+        XHCDownloader *downloader = [_downloaderDict objectForKey:model.url];
+        [downloader pause];
+        [_downloaderDict removeObjectForKey:model.url];
+        [_downloaderModelDict removeObjectForKey:model.url];
+    }
+    if ([[NSFileManager defaultManager] fileExistsAtPath:model.destPath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:model.destPath error:nil];
+    }
+    [XHCDownloader removeLocalFileDownloadScaleWithUrl:model.url];
+    
 }
 
 @end

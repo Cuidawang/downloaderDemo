@@ -15,5 +15,7 @@
 #import <AFNetworking.h>
 #import <UIImageView+WebCache.h>
 #import <PureLayout.h>
+#import "Util.h"
+#import "AppDelegate.h"
 
 #endif /* PrefixHeader_pch */

@@ -54,9 +54,9 @@
 {
     _model = model;
     [_picView sd_setImageWithURL:[NSURL URLWithString:_model.imageUrl]];
-    RAC(_progressLabel, text) = [RACObserve(self, model.progress) map:^id(NSNumber *value) {
+    RAC(_progressLabel, text) = [[RACObserve(self, model.progress) map:^id(NSNumber *value) {
         return [NSString stringWithFormat:@"%.2f", value.floatValue];
-    }];
+    }] takeUntil:self.rac_prepareForReuseSignal];
     RAC(_titleLabel, text) = [RACObserve(self, model.title) takeUntil:self.rac_prepareForReuseSignal];
 }
 

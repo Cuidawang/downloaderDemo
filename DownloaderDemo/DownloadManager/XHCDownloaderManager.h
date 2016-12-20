@@ -14,6 +14,8 @@
 
 + (XHCDownloaderManager *)shareInstall;
 
-- (void)downloadPathWithDownloaderModel:(XHCDownloaderModel *)model;
+- (void)downloadFileWithDownloaderModel:(XHCDownloaderModel *)model;
+
+- (void)removeDownloadFildWithDownloadModel:(XHCDownloaderModel *)model;
 
 @end

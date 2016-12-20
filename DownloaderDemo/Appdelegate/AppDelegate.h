@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+#define XHCAPPDELEGATE ((AppDelegate *)[[UIApplication sharedApplication] delegate])
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
+@property (nonatomic, strong) UINavigationController *navigation;
 
 @end
 
